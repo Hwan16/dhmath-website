@@ -1,0 +1,298 @@
+---
+alwaysApply: true
+---
+
+# 스타일 및 디자인 가이드
+
+## 적용 대상
+모든 UI 관련 작업
+
+## 디자인 원칙
+1. **밝고 따뜻한 느낌** - 학생들이 친근하게 느낄 수 있는 분위기
+2. **깔끔하고 현대적** - 전문성을 보여주면서도 접근성 있는 디자인
+3. **반응형 필수** - 모바일과 데스크톱 모두 완벽 지원
+
+## 컬러 팔레트
+
+### Tailwind 설정
+```javascript
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          50: '#FFF0F3',
+          100: '#FFE0E6',
+          200: '#FFC1CD',
+          300: '#FF8FAB',  // 메인 핑크
+          400: '#FF6B8A',
+          500: '#FF4D6D',
+          600: '#E63956',
+          700: '#C02A44',
+          800: '#9A2238',
+          900: '#7D1D2F',
+        },
+        peach: {
+          50: '#FFF8F0',
+          100: '#FFECD9',
+          200: '#FFD4A3',  // 살구색
+          300: '#FFBC6D',
+          400: '#FFA537',
+          500: '#FF8E01',
+        },
+      },
+    },
+  },
+};
+```
+
+### 사용 예시
+```tsx
+// 메인 컬러
+className="bg-primary-300"      // 배경
+className="text-primary-500"    // 텍스트
+className="border-primary-300"  // 테두리
+
+// 배경
+className="bg-orange-50"        // 페이지 배경 (따뜻한 화이트)
+className="bg-white"            // 카드 배경
+
+// 텍스트
+className="text-gray-800"       // 주요 텍스트
+className="text-gray-600"       // 보조 텍스트
+className="text-gray-400"       // 비활성/힌트 텍스트
+```
+
+## 타이포그래피
+
+### 폰트 설정
+```tsx
+// app/layout.tsx
+import localFont from 'next/font/local';
+
+const pretendard = localFont({
+  src: [
+    {
+      path: '../fonts/Pretendard-Regular.woff2',
+      weight: '400',
+    },
+    {
+      path: '../fonts/Pretendard-Medium.woff2',
+      weight: '500',
+    },
+    {
+      path: '../fonts/Pretendard-SemiBold.woff2',
+      weight: '600',
+    },
+    {
+      path: '../fonts/Pretendard-Bold.woff2',
+      weight: '700',
+    },
+  ],
+  variable: '--font-pretendard',
+});
+```
+
+### 텍스트 스타일
+```tsx
+// 페이지 제목
+className="text-3xl md:text-4xl font-bold text-gray-800"
+
+// 섹션 제목
+className="text-2xl font-bold text-gray-800"
+
+// 카드 제목
+className="text-lg font-semibold text-gray-800"
+
+// 본문
+className="text-base text-gray-600 leading-relaxed"
+
+// 작은 텍스트
+className="text-sm text-gray-500"
+```
+
+## 컴포넌트 스타일
+
+### 카드
+```tsx
+// 기본 카드
+className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-6"
+
+// 이미지 카드
+className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-all hover:-translate-y-1"
+```
+
+### 버튼
+```tsx
+// Primary 버튼
+className="px-6 py-3 bg-primary-300 text-white font-medium rounded-xl hover:bg-primary-400 transition-colors"
+
+// Secondary 버튼
+className="px-6 py-3 bg-peach-200 text-gray-800 font-medium rounded-xl hover:bg-peach-300 transition-colors"
+
+// Outline 버튼
+className="px-6 py-3 border-2 border-primary-300 text-primary-500 font-medium rounded-xl hover:bg-primary-50 transition-colors"
+
+// Ghost 버튼
+className="px-4 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+```
+
+### 입력 필드
+```tsx
+// 기본 입력
+className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent transition"
+
+// 에러 상태
+className="w-full px-4 py-3 border border-red-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-300"
+```
+
+### 네비게이션
+```tsx
+// 네비게이션 링크
+className="text-gray-600 hover:text-primary-500 font-medium transition-colors"
+
+// 활성 링크
+className="text-primary-500 font-semibold"
+```
+
+## 레이아웃
+
+### 컨테이너
+```tsx
+// 기본 컨테이너
+className="container mx-auto px-4"
+
+// 좁은 컨테이너 (글 읽기용)
+className="container mx-auto px-4 max-w-3xl"
+
+// 넓은 컨테이너
+className="container mx-auto px-4 max-w-7xl"
+```
+
+### 그리드
+```tsx
+// 3열 그리드 (반응형)
+className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+
+// 2열 그리드
+className="grid grid-cols-1 md:grid-cols-2 gap-6"
+
+// 4열 그리드
+className="grid grid-cols-2 md:grid-cols-4 gap-4"
+```
+
+### 섹션 여백
+```tsx
+// 섹션 간격
+className="py-12 md:py-16"
+
+// 요소 간격
+className="space-y-6"
+className="space-y-4"
+```
+
+## 반응형 패턴
+
+### 모바일 퍼스트
+```tsx
+// 항상 모바일 스타일 먼저, 그 다음 큰 화면
+className="
+  text-xl          // 모바일 기본
+  md:text-2xl      // 태블릿
+  lg:text-3xl      // 데스크톱
+"
+
+className="
+  px-4             // 모바일 패딩
+  md:px-6          // 태블릿
+  lg:px-8          // 데스크톱
+"
+```
+
+### 네비게이션 반응형
+```tsx
+// 모바일: 햄버거 메뉴
+// 데스크톱: 가로 메뉴
+<nav className="hidden md:flex items-center gap-6">
+  {/* 데스크톱 메뉴 */}
+</nav>
+<button className="md:hidden">
+  {/* 모바일 햄버거 버튼 */}
+</button>
+```
+
+### 이미지 반응형
+```tsx
+<div className="relative aspect-video">
+  <Image
+    src={src}
+    alt={alt}
+    fill
+    className="object-cover rounded-xl"
+    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+  />
+</div>
+```
+
+## 애니메이션
+
+### 호버 효과
+```tsx
+// 카드 호버
+className="transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+
+// 버튼 호버
+className="transition-colors duration-200"
+
+// 링크 호버
+className="transition-colors duration-150"
+```
+
+### 스켈레톤 로딩
+```tsx
+className="animate-pulse bg-gray-200 rounded"
+```
+
+### 페이드 인
+```tsx
+// Tailwind 애니메이션 확장
+// tailwind.config.js
+animation: {
+  'fade-in': 'fadeIn 0.3s ease-out',
+},
+keyframes: {
+  fadeIn: {
+    '0%': { opacity: '0', transform: 'translateY(10px)' },
+    '100%': { opacity: '1', transform: 'translateY(0)' },
+  },
+},
+```
+
+## 아이콘
+```tsx
+// Lucide React 사용
+import { Menu, X, ChevronRight, Lock, Calendar } from 'lucide-react';
+
+// 아이콘 크기
+<Menu className="w-6 h-6" />          // 기본
+<ChevronRight className="w-4 h-4" />  // 작은
+<Lock className="w-8 h-8" />          // 큰
+```
+
+## 그림자
+```tsx
+className="shadow-sm"   // 카드 기본
+className="shadow-md"   // 호버 또는 모달
+className="shadow-lg"   // 드롭다운
+className="shadow-xl"   // 모달 오버레이
+```
+
+## Z-Index 계층
+```tsx
+z-10    // 드롭다운
+z-20    // 스티키 헤더
+z-30    // 모바일 메뉴 오버레이
+z-40    // 모바일 메뉴
+z-50    // 모달
+```

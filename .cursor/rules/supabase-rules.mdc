@@ -1,0 +1,296 @@
+---
+alwaysApply: false
+---
+
+# Supabase 사용 규칙
+
+## 적용 대상
+Supabase 관련 모든 파일 (`lib/supabase/**`, 데이터 페칭 코드)
+
+## 환경 변수
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key  # 서버 전용
+```
+
+## 클라이언트 설정
+
+### 브라우저 클라이언트
+```tsx
+// lib/supabase/client.ts
+import { createBrowserClient } from '@supabase/ssr';
+
+export function createClient() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
+```
+
+### 서버 클라이언트
+```tsx
+// lib/supabase/server.ts
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+
+export function createClient() {
+  const cookieStore = cookies();
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+        set(name: string, value: string, options: CookieOptions) {
+          cookieStore.set({ name, value, ...options });
+        },
+        remove(name: string, options: CookieOptions) {
+          cookieStore.set({ name, value: '', ...options });
+        },
+      },
+    }
+  );
+}
+```
+
+## 데이터베이스 테이블
+
+### profiles (사용자 프로필)
+```sql
+CREATE TABLE public.profiles (
+  id UUID REFERENCES auth.users(id) PRIMARY KEY,
+  name TEXT NOT NULL,
+  phone TEXT,
+  role TEXT DEFAULT 'student' CHECK (role IN ('student', 'admin')),
+  all_access BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- RLS 활성화
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
+-- 정책: 본인 프로필 읽기
+CREATE POLICY "Users can read own profile"
+  ON public.profiles FOR SELECT
+  USING (auth.uid() = id);
+
+-- 정책: 관리자는 모든 프로필 읽기
+CREATE POLICY "Admins can read all profiles"
+  ON public.profiles FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.profiles
+      WHERE id = auth.uid() AND role = 'admin'
+    )
+  );
+```
+
+### lectures (강의)
+```sql
+CREATE TABLE public.lectures (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT,
+  youtube_url TEXT NOT NULL,
+  thumbnail_url TEXT,
+  order_index INTEGER DEFAULT 0,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- RLS 활성화
+ALTER TABLE public.lectures ENABLE ROW LEVEL SECURITY;
+
+-- 정책: 모든 사용자 읽기
+CREATE POLICY "Anyone can read active lectures"
+  ON public.lectures FOR SELECT
+  USING (is_active = true);
+
+-- 정책: 관리자만 쓰기
+CREATE POLICY "Only admins can insert lectures"
+  ON public.lectures FOR INSERT
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM public.profiles
+      WHERE id = auth.uid() AND role = 'admin'
+    )
+  );
+```
+
+### lecture_permissions (강의 권한)
+```sql
+CREATE TABLE public.lecture_permissions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+  lecture_id UUID REFERENCES public.lectures(id) ON DELETE CASCADE,
+  granted_at TIMESTAMPTZ DEFAULT NOW(),
+  granted_by UUID REFERENCES public.profiles(id),
+  UNIQUE(user_id, lecture_id)
+);
+
+-- RLS 활성화
+ALTER TABLE public.lecture_permissions ENABLE ROW LEVEL SECURITY;
+
+-- 정책: 본인 권한만 읽기
+CREATE POLICY "Users can read own permissions"
+  ON public.lecture_permissions FOR SELECT
+  USING (auth.uid() = user_id);
+```
+
+## 데이터 페칭 패턴
+
+### 서버 컴포넌트에서 페칭
+```tsx
+// app/lectures/page.tsx
+import { createClient } from '@/lib/supabase/server';
+
+export default async function LecturesPage() {
+  const supabase = createClient();
+  
+  const { data: lectures, error } = await supabase
+    .from('lectures')
+    .select('*')
+    .eq('is_active', true)
+    .order('order_index', { ascending: true });
+
+  if (error) {
+    console.error('강의 목록 조회 실패:', error);
+    return <div>강의를 불러오는데 실패했습니다.</div>;
+  }
+
+  return <LectureList lectures={lectures} />;
+}
+```
+
+### 클라이언트 컴포넌트에서 페칭
+```tsx
+'use client';
+
+import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import type { Lecture } from '@/types';
+
+export function LectureList() {
+  const [lectures, setLectures] = useState<Lecture[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  useEffect(() => {
+    async function fetchLectures() {
+      const { data, error } = await supabase
+        .from('lectures')
+        .select('*')
+        .eq('is_active', true);
+
+      if (error) {
+        console.error('강의 목록 조회 실패:', error);
+      } else {
+        setLectures(data || []);
+      }
+      setLoading(false);
+    }
+
+    fetchLectures();
+  }, []);
+
+  if (loading) return <LoadingSkeleton />;
+  return <div>{/* 렌더링 */}</div>;
+}
+```
+
+## 인증 패턴
+
+### 회원가입
+```tsx
+const { data, error } = await supabase.auth.signUp({
+  email,
+  password,
+  options: {
+    data: {
+      name: name,
+      phone: phone,
+    },
+  },
+});
+```
+
+### 로그인
+```tsx
+const { data, error } = await supabase.auth.signInWithPassword({
+  email,
+  password,
+});
+```
+
+### 세션 확인
+```tsx
+const { data: { session } } = await supabase.auth.getSession();
+
+if (!session) {
+  redirect('/auth/login');
+}
+```
+
+### 로그아웃
+```tsx
+await supabase.auth.signOut();
+```
+
+## 권한 체크 함수
+```tsx
+// lib/supabase/auth.ts
+export async function checkLectureAccess(
+  supabase: SupabaseClient,
+  lectureId: string
+): Promise<boolean> {
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) return false;
+
+  // 프로필 조회
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role, all_access')
+    .eq('id', user.id)
+    .single();
+
+  // 관리자이거나 전체 접근 권한이 있으면 허용
+  if (profile?.role === 'admin' || profile?.all_access) {
+    return true;
+  }
+
+  // 개별 권한 체크
+  const { data: permission } = await supabase
+    .from('lecture_permissions')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('lecture_id', lectureId)
+    .single();
+
+  return !!permission;
+}
+```
+
+## 에러 처리
+```tsx
+try {
+  const { data, error } = await supabase.from('lectures').select('*');
+  
+  if (error) {
+    throw error;
+  }
+  
+  return data;
+} catch (error) {
+  console.error('데이터베이스 오류:', error);
+  // 사용자에게 친화적인 에러 메시지 표시
+  throw new Error('데이터를 불러오는데 실패했습니다.');
+}
+```

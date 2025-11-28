@@ -1,0 +1,9 @@
+---
+globs: src/app/**/*
+alwaysApply: false
+---
+      images: [data.thumbnail],
+    },
+  };
+}
+```

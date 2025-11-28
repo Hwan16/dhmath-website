@@ -1,0 +1,413 @@
+---
+alwaysApply: false
+---
+
+# Sanity CMS 사용 규칙
+
+## 적용 대상
+Sanity 관련 모든 파일 (`sanity/**`, `lib/sanity/**`)
+
+## 환경 변수
+```env
+NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
+NEXT_PUBLIC_SANITY_DATASET=production
+SANITY_API_TOKEN=your_api_token  # 서버 전용 (미리보기용)
+```
+
+## Sanity 클라이언트 설정
+```tsx
+// lib/sanity/client.ts
+import { createClient } from 'next-sanity';
+import imageUrlBuilder from '@sanity/image-url';
+
+export const client = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
+  apiVersion: '2024-01-01',
+  useCdn: true, // 프로덕션에서는 true
+});
+
+// 이미지 URL 빌더
+const builder = imageUrlBuilder(client);
+
+export function urlFor(source: any) {
+  return builder.image(source);
+}
+```
+
+## 스키마 정의
+
+### Post (아티클/입시전략)
+```tsx
+// sanity/schemas/post.ts
+import { defineField, defineType } from 'sanity';
+
+export default defineType({
+  name: 'post',
+  title: '게시글',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'title',
+      title: '제목',
+      type: 'string',
+      validation: (Rule) => Rule.required().max(100),
+    }),
+    defineField({
+      name: 'slug',
+      title: 'URL 슬러그',
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'category',
+      title: '카테고리',
+      type: 'string',
+      options: {
+        list: [
+          { title: '아티클', value: 'article' },
+          { title: '입시 전략', value: 'strategy' },
+        ],
+        layout: 'radio',
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'thumbnail',
+      title: '썸네일 이미지',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+    }),
+    defineField({
+      name: 'excerpt',
+      title: '요약',
+      type: 'text',
+      rows: 3,
+      validation: (Rule) => Rule.max(200),
+    }),
+    defineField({
+      name: 'body',
+      title: '본문',
+      type: 'blockContent',
+    }),
+    defineField({
+      name: 'isPinned',
+      title: '상단 고정',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'publishedAt',
+      title: '발행일',
+      type: 'datetime',
+    }),
+  ],
+  preview: {
+    select: {
+      title: 'title',
+      category: 'category',
+      media: 'thumbnail',
+    },
+    prepare({ title, category, media }) {
+      const categoryLabel = category === 'article' ? '📝 아티클' : '🎯 입시 전략';
+      return {
+        title,
+        subtitle: categoryLabel,
+        media,
+      };
+    },
+  },
+});
+```
+
+### Block Content (리치 텍스트)
+```tsx
+// sanity/schemas/blockContent.ts
+import { defineType, defineArrayMember } from 'sanity';
+
+export default defineType({
+  name: 'blockContent',
+  title: 'Block Content',
+  type: 'array',
+  of: [
+    defineArrayMember({
+      type: 'block',
+      styles: [
+        { title: '본문', value: 'normal' },
+        { title: '제목 1', value: 'h1' },
+        { title: '제목 2', value: 'h2' },
+        { title: '제목 3', value: 'h3' },
+        { title: '인용구', value: 'blockquote' },
+      ],
+      marks: {
+        decorators: [
+          { title: '굵게', value: 'strong' },
+          { title: '기울임', value: 'em' },
+          { title: '밑줄', value: 'underline' },
+          { title: '형광펜', value: 'highlight' },
+        ],
+        annotations: [
+          {
+            name: 'link',
+            type: 'object',
+            title: '링크',
+            fields: [
+              {
+                name: 'href',
+                type: 'url',
+                title: 'URL',
+              },
+            ],
+          },
+        ],
+      },
+    }),
+    defineArrayMember({
+      type: 'image',
+      options: { hotspot: true },
+    }),
+    defineArrayMember({
+      type: 'youtube',
+    }),
+  ],
+});
+```
+
+### YouTube 임베드
+```tsx
+// sanity/schemas/youtube.ts
+import { defineType } from 'sanity';
+
+export default defineType({
+  name: 'youtube',
+  title: 'YouTube 영상',
+  type: 'object',
+  fields: [
+    {
+      name: 'url',
+      title: 'YouTube URL',
+      type: 'url',
+    },
+  ],
+  preview: {
+    select: { url: 'url' },
+    prepare({ url }) {
+      return {
+        title: 'YouTube 영상',
+        subtitle: url,
+      };
+    },
+  },
+});
+```
+
+## GROQ 쿼리
+
+### 게시글 목록 조회
+```tsx
+// lib/sanity/queries.ts
+import { groq } from 'next-sanity';
+
+// 카테고리별 게시글 목록 (고정글 먼저, 그 다음 최신순)
+export const postsQuery = groq`
+  *[_type == "post" && category == $category] | order(isPinned desc, publishedAt desc) {
+    _id,
+    title,
+    slug,
+    excerpt,
+    thumbnail,
+    isPinned,
+    publishedAt
+  }
+`;
+
+// 최신 게시글 (홈페이지용)
+export const recentPostsQuery = groq`
+  *[_type == "post" && category == $category] | order(isPinned desc, publishedAt desc)[0...$limit] {
+    _id,
+    title,
+    slug,
+    excerpt,
+    thumbnail,
+    isPinned,
+    publishedAt
+  }
+`;
+
+// 단일 게시글 상세
+export const postDetailQuery = groq`
+  *[_type == "post" && slug.current == $slug][0] {
+    _id,
+    title,
+    category,
+    thumbnail,
+    body,
+    publishedAt,
+    "previousPost": *[_type == "post" && category == ^.category && publishedAt < ^.publishedAt] | order(publishedAt desc)[0] {
+      title,
+      slug
+    },
+    "nextPost": *[_type == "post" && category == ^.category && publishedAt > ^.publishedAt] | order(publishedAt asc)[0] {
+      title,
+      slug
+    }
+  }
+`;
+```
+
+### 데이터 페칭 함수
+```tsx
+// lib/sanity/fetch.ts
+import { client } from './client';
+import { postsQuery, recentPostsQuery, postDetailQuery } from './queries';
+import type { Post, PostDetail } from '@/types';
+
+export async function getPosts(category: 'article' | 'strategy'): Promise<Post[]> {
+  return client.fetch(postsQuery, { category });
+}
+
+export async function getRecentPosts(
+  category: 'article' | 'strategy',
+  limit: number = 3
+): Promise<Post[]> {
+  return client.fetch(recentPostsQuery, { category, limit });
+}
+
+export async function getPostDetail(slug: string): Promise<PostDetail | null> {
+  return client.fetch(postDetailQuery, { slug });
+}
+```
+
+## Portable Text 렌더링
+```tsx
+// components/features/articles/portable-text.tsx
+import { PortableText } from '@portabletext/react';
+import Image from 'next/image';
+import { urlFor } from '@/lib/sanity/client';
+
+const components = {
+  types: {
+    image: ({ value }: any) => (
+      <figure className="my-8">
+        <Image
+          src={urlFor(value).width(800).url()}
+          alt={value.alt || ''}
+          width={800}
+          height={450}
+          className="rounded-lg"
+        />
+        {value.caption && (
+          <figcaption className="text-center text-sm text-gray-500 mt-2">
+            {value.caption}
+          </figcaption>
+        )}
+      </figure>
+    ),
+    youtube: ({ value }: any) => {
+      const videoId = extractYouTubeId(value.url);
+      return (
+        <div className="my-8 aspect-video">
+          <iframe
+            src={`https://www.youtube.com/embed/${videoId}?rel=0`}
+            className="w-full h-full rounded-lg"
+            allowFullScreen
+          />
+        </div>
+      );
+    },
+  },
+  marks: {
+    link: ({ children, value }: any) => (
+      <a
+        href={value.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-pink-500 hover:text-pink-600 underline"
+      >
+        {children}
+      </a>
+    ),
+    highlight: ({ children }: any) => (
+      <mark className="bg-yellow-200 px-1 rounded">{children}</mark>
+    ),
+  },
+  block: {
+    h1: ({ children }: any) => (
+      <h1 className="text-3xl font-bold mt-8 mb-4">{children}</h1>
+    ),
+    h2: ({ children }: any) => (
+      <h2 className="text-2xl font-bold mt-6 mb-3">{children}</h2>
+    ),
+    h3: ({ children }: any) => (
+      <h3 className="text-xl font-bold mt-4 mb-2">{children}</h3>
+    ),
+    blockquote: ({ children }: any) => (
+      <blockquote className="border-l-4 border-pink-400 pl-4 my-4 italic text-gray-600">
+        {children}
+      </blockquote>
+    ),
+  },
+};
+
+export function PostBody({ body }: { body: any }) {
+  return (
+    <article className="prose prose-lg max-w-none">
+      <PortableText value={body} components={components} />
+    </article>
+  );
+}
+
+// YouTube URL에서 ID 추출
+function extractYouTubeId(url: string): string {
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?\/]+)/
+  );
+  return match?.[1] || '';
+}
+```
+
+## 이미지 최적화
+```tsx
+// 썸네일 이미지
+urlFor(thumbnail).width(400).height(225).fit('crop').url()
+
+// 본문 이미지
+urlFor(image).width(800).quality(80).url()
+
+// 프로필 이미지
+urlFor(profile).width(200).height(200).fit('crop').url()
+```
+
+## 타입 정의
+```tsx
+// types/sanity.ts
+export interface Post {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  excerpt?: string;
+  thumbnail?: SanityImage;
+  isPinned: boolean;
+  publishedAt: string;
+}
+
+export interface PostDetail extends Post {
+  category: 'article' | 'strategy';
+  body: any[]; // Portable Text
+  previousPost?: { title: string; slug: { current: string } };
+  nextPost?: { title: string; slug: { current: string } };
+}
+
+export interface SanityImage {
+  _type: 'image';
+  asset: {
+    _ref: string;
+  };
+}
+```
