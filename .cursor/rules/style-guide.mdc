@@ -2,45 +2,60 @@
 alwaysApply: true
 ---
 
-# 스타일 및 디자인 가이드
+# 스타일 및 디자인 가이드 (화이트 베이스 + 인디고/핑크)
 
 ## 적용 대상
 모든 UI 관련 작업
 
-## 디자인 원칙
-1. **밝고 따뜻한 느낌** - 학생들이 친근하게 느낄 수 있는 분위기
-2. **깔끔하고 현대적** - 전문성을 보여주면서도 접근성 있는 디자인
-3. **반응형 필수** - 모바일과 데스크톱 모두 완벽 지원
+## 디자인 컨셉
+1. **화이트 베이스** - 밝고 깔끔한 화이트 배경
+2. **인디고 + 핑크** - 메인 인디고, 포인트 핑크
+3. **스크롤 애니메이션** - Framer Motion으로 부드러운 등장
+4. **마이크로 인터랙션** - 호버, 클릭 시 부드러운 전환
+5. **반응형 필수** - 모바일과 데스크톱 모두 완벽 지원
 
 ## 컬러 팔레트
 
 ### Tailwind 설정
 ```javascript
-// tailwind.config.js
+// tailwind.config.ts
 module.exports = {
   theme: {
     extend: {
       colors: {
+        // 메인 컬러 - 인디고
         primary: {
-          50: '#FFF0F3',
-          100: '#FFE0E6',
-          200: '#FFC1CD',
-          300: '#FF8FAB',  // 메인 핑크
-          400: '#FF6B8A',
-          500: '#FF4D6D',
-          600: '#E63956',
-          700: '#C02A44',
-          800: '#9A2238',
-          900: '#7D1D2F',
+          50: '#EEF2FF',
+          100: '#E0E7FF',
+          200: '#C7D2FE',
+          300: '#A5B4FC',
+          400: '#818CF8',
+          500: '#6366F1',  // 메인
+          600: '#4F46E5',
+          700: '#4338CA',
+          800: '#3730A3',
+          900: '#312E81',
         },
-        peach: {
-          50: '#FFF8F0',
-          100: '#FFECD9',
-          200: '#FFD4A3',  // 살구색
-          300: '#FFBC6D',
-          400: '#FFA537',
-          500: '#FF8E01',
+        // 포인트 컬러 - 핑크
+        accent: {
+          50: '#FDF2F8',
+          100: '#FCE7F3',
+          200: '#FBCFE8',
+          300: '#F9A8D4',
+          400: '#F472B6',
+          500: '#EC4899',  // 메인 핑크
+          600: '#DB2777',
+          700: '#BE185D',
         },
+      },
+      backgroundImage: {
+        'gradient-primary': 'linear-gradient(135deg, #6366F1, #EC4899)',
+        'gradient-primary-hover': 'linear-gradient(135deg, #4F46E5, #DB2777)',
+      },
+      boxShadow: {
+        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
+        'card-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+        'header': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
       },
     },
   },
@@ -49,111 +64,198 @@ module.exports = {
 
 ### 사용 예시
 ```tsx
-// 메인 컬러
-className="bg-primary-300"      // 배경
-className="text-primary-500"    // 텍스트
-className="border-primary-300"  // 테두리
-
 // 배경
-className="bg-orange-50"        // 페이지 배경 (따뜻한 화이트)
-className="bg-white"            // 카드 배경
+className="bg-white"              // 메인 배경
+className="bg-slate-50"           // 섹션 배경 (연한 그레이)
+className="bg-gradient-to-br from-primary-50 to-accent-50" // 은은한 그라데이션
+
+// 메인 컬러
+className="bg-primary-500"        // 버튼 배경
+className="text-primary-600"      // 강조 텍스트
+className="border-primary-500"    // 테두리
+
+// 포인트 컬러
+className="text-accent-500"       // 핑크 강조
+className="bg-accent-500"         // 핑크 배경
 
 // 텍스트
-className="text-gray-800"       // 주요 텍스트
-className="text-gray-600"       // 보조 텍스트
-className="text-gray-400"       // 비활성/힌트 텍스트
+className="text-slate-900"        // 주요 텍스트 (다크 네이비)
+className="text-slate-600"        // 보조 텍스트
+className="text-slate-400"        // 비활성/힌트 텍스트
 ```
 
 ## 타이포그래피
 
-### 폰트 설정
-```tsx
-// app/layout.tsx
-import localFont from 'next/font/local';
-
-const pretendard = localFont({
-  src: [
-    {
-      path: '../fonts/Pretendard-Regular.woff2',
-      weight: '400',
-    },
-    {
-      path: '../fonts/Pretendard-Medium.woff2',
-      weight: '500',
-    },
-    {
-      path: '../fonts/Pretendard-SemiBold.woff2',
-      weight: '600',
-    },
-    {
-      path: '../fonts/Pretendard-Bold.woff2',
-      weight: '700',
-    },
-  ],
-  variable: '--font-pretendard',
-});
-```
-
 ### 텍스트 스타일
 ```tsx
 // 페이지 제목
-className="text-3xl md:text-4xl font-bold text-gray-800"
+className="text-4xl md:text-5xl font-bold text-slate-900"
 
 // 섹션 제목
-className="text-2xl font-bold text-gray-800"
+className="text-2xl md:text-3xl font-bold text-slate-900"
 
 // 카드 제목
-className="text-lg font-semibold text-gray-800"
+className="text-lg font-semibold text-slate-900"
 
 // 본문
-className="text-base text-gray-600 leading-relaxed"
+className="text-base text-slate-600 leading-relaxed"
 
 // 작은 텍스트
-className="text-sm text-gray-500"
+className="text-sm text-slate-500"
+
+// 강조 텍스트 (인디고)
+className="text-primary-600"
+
+// 강조 텍스트 (핑크)
+className="text-accent-500"
+
+// 그라데이션 텍스트
+className="bg-gradient-to-r from-primary-600 to-accent-500 bg-clip-text text-transparent"
 ```
 
 ## 컴포넌트 스타일
 
+### 버튼
+```tsx
+// Primary 버튼 (그라데이션)
+className="px-6 py-3 bg-gradient-to-r from-primary-500 to-accent-500 text-white font-medium rounded-xl 
+           hover:from-primary-600 hover:to-accent-600 hover:shadow-lg
+           transform hover:-translate-y-0.5 transition-all duration-300"
+
+// Primary 버튼 (단색)
+className="px-6 py-3 bg-primary-500 text-white font-medium rounded-xl 
+           hover:bg-primary-600 hover:shadow-lg transition-all duration-300"
+
+// Secondary 버튼 (아웃라인)
+className="px-6 py-3 border-2 border-primary-500 text-primary-600 font-medium rounded-xl 
+           hover:bg-primary-50 transition-all duration-300"
+
+// Ghost 버튼
+className="px-4 py-2 text-slate-600 hover:text-primary-600 hover:bg-slate-100 rounded-lg transition-all duration-300"
+```
+
 ### 카드
 ```tsx
 // 기본 카드
-className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow p-6"
+className="bg-white rounded-2xl shadow-card p-6
+           hover:shadow-card-hover hover:-translate-y-1
+           transition-all duration-300"
 
 // 이미지 카드
-className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-all hover:-translate-y-1"
-```
+className="bg-white rounded-2xl shadow-card overflow-hidden
+           hover:shadow-card-hover hover:-translate-y-1
+           transition-all duration-300"
 
-### 버튼
-```tsx
-// Primary 버튼
-className="px-6 py-3 bg-primary-300 text-white font-medium rounded-xl hover:bg-primary-400 transition-colors"
-
-// Secondary 버튼
-className="px-6 py-3 bg-peach-200 text-gray-800 font-medium rounded-xl hover:bg-peach-300 transition-colors"
-
-// Outline 버튼
-className="px-6 py-3 border-2 border-primary-300 text-primary-500 font-medium rounded-xl hover:bg-primary-50 transition-colors"
-
-// Ghost 버튼
-className="px-4 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+// 카드 (테두리 있는)
+className="bg-white rounded-2xl border border-slate-200 p-6
+           hover:border-primary-300 hover:shadow-lg
+           transition-all duration-300"
 ```
 
 ### 입력 필드
 ```tsx
 // 기본 입력
-className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent transition"
+className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400
+           focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 
+           transition-all duration-300"
 
 // 에러 상태
-className="w-full px-4 py-3 border border-red-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-300"
+className="w-full px-4 py-3 bg-white border border-red-300 rounded-xl text-slate-900
+           focus:outline-none focus:ring-2 focus:ring-red-500/20"
 ```
 
 ### 네비게이션
 ```tsx
+// 헤더 (스크롤 전)
+className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 transition-all duration-300"
+
+// 헤더 (스크롤 후)
+className="fixed top-0 w-full bg-white shadow-header z-50"
+
 // 네비게이션 링크
-className="text-gray-600 hover:text-primary-500 font-medium transition-colors"
+className="text-slate-600 hover:text-primary-600 font-medium transition-colors duration-300"
 
 // 활성 링크
-className="text-primary-500 font-semibold"
+className="text-primary-600 font-semibold"
+```
+
+## 애니메이션 (Framer Motion)
+
+### 스크롤 애니메이션 variants
+```tsx
+// 페이드 인 업
+export const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 0.6, ease: 'easeOut' } 
+  }
+};
+
+// 페이드 인
+export const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { 
+    opacity: 1, 
+    transition: { duration: 0.6, ease: 'easeOut' } 
+  }
+};
+
+// 스태거 컨테이너
+export const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { 
+      staggerChildren: 0.1,
+      delayChildren: 0.1
+    }
+  }
+};
+
+// 스태거 아이템
+export const staggerItem = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.5 }
+  }
+};
+```
+
+### 사용 예시
+```tsx
+// 섹션 애니메이션
+<motion.section
+  initial={{ opacity: 0, y: 50 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true, margin: "-100px" }}
+  transition={{ duration: 0.6 }}
+>
+  {/* 내용 */}
+</motion.section>
+
+// 카드 순차 등장
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.5, delay: index * 0.1 }}
+>
+  {/* 카드 */}
+</motion.div>
+```
+
+### 호버 애니메이션
+```tsx
+// 카드 호버
+whileHover={{ y: -4, transition: { duration: 0.3 } }}
+
+// 버튼 호버
+whileHover={{ scale: 1.02, y: -2 }}
+whileTap={{ scale: 0.98 }}
 ```
 
 ## 레이아웃
@@ -177,96 +279,44 @@ className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
 
 // 2열 그리드
 className="grid grid-cols-1 md:grid-cols-2 gap-6"
-
-// 4열 그리드
-className="grid grid-cols-2 md:grid-cols-4 gap-4"
 ```
 
 ### 섹션 여백
 ```tsx
 // 섹션 간격
-className="py-12 md:py-16"
+className="py-16 md:py-24"
 
 // 요소 간격
-className="space-y-6"
-className="space-y-4"
+className="space-y-8"
 ```
 
 ## 반응형 패턴
 
 ### 모바일 퍼스트
 ```tsx
-// 항상 모바일 스타일 먼저, 그 다음 큰 화면
 className="
-  text-xl          // 모바일 기본
-  md:text-2xl      // 태블릿
-  lg:text-3xl      // 데스크톱
-"
-
-className="
-  px-4             // 모바일 패딩
-  md:px-6          // 태블릿
-  lg:px-8          // 데스크톱
+  text-3xl          // 모바일
+  md:text-4xl       // 태블릿
+  lg:text-5xl       // 데스크톱
 "
 ```
 
-### 네비게이션 반응형
+## 배경 효과
+
+### 은은한 그라데이션 배경
 ```tsx
-// 모바일: 햄버거 메뉴
-// 데스크톱: 가로 메뉴
-<nav className="hidden md:flex items-center gap-6">
-  {/* 데스크톱 메뉴 */}
-</nav>
-<button className="md:hidden">
-  {/* 모바일 햄버거 버튼 */}
-</button>
+// 섹션 배경
+className="bg-gradient-to-br from-primary-50/50 via-white to-accent-50/50"
+
+// 히어로 배경
+className="bg-gradient-to-br from-slate-50 via-white to-primary-50"
 ```
 
-### 이미지 반응형
+### 장식 요소
 ```tsx
-<div className="relative aspect-video">
-  <Image
-    src={src}
-    alt={alt}
-    fill
-    className="object-cover rounded-xl"
-    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-  />
-</div>
-```
-
-## 애니메이션
-
-### 호버 효과
-```tsx
-// 카드 호버
-className="transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-
-// 버튼 호버
-className="transition-colors duration-200"
-
-// 링크 호버
-className="transition-colors duration-150"
-```
-
-### 스켈레톤 로딩
-```tsx
-className="animate-pulse bg-gray-200 rounded"
-```
-
-### 페이드 인
-```tsx
-// Tailwind 애니메이션 확장
-// tailwind.config.js
-animation: {
-  'fade-in': 'fadeIn 0.3s ease-out',
-},
-keyframes: {
-  fadeIn: {
-    '0%': { opacity: '0', transform: 'translateY(10px)' },
-    '100%': { opacity: '1', transform: 'translateY(0)' },
-  },
-},
+// 배경 블롭 (은은한)
+<div className="absolute top-0 right-0 w-96 h-96 bg-primary-100/50 rounded-full blur-3xl" />
+<div className="absolute bottom-0 left-0 w-96 h-96 bg-accent-100/50 rounded-full blur-3xl" />
 ```
 
 ## 아이콘
@@ -275,17 +325,16 @@ keyframes: {
 import { Menu, X, ChevronRight, Lock, Calendar } from 'lucide-react';
 
 // 아이콘 크기
-<Menu className="w-6 h-6" />          // 기본
-<ChevronRight className="w-4 h-4" />  // 작은
-<Lock className="w-8 h-8" />          // 큰
+<Menu className="w-6 h-6 text-slate-700" />
+<ChevronRight className="w-4 h-4 text-slate-400" />
 ```
 
 ## 그림자
 ```tsx
-className="shadow-sm"   // 카드 기본
-className="shadow-md"   // 호버 또는 모달
-className="shadow-lg"   // 드롭다운
-className="shadow-xl"   // 모달 오버레이
+className="shadow-sm"      // 카드 기본
+className="shadow-card"    // 카드 (커스텀)
+className="shadow-lg"      // 호버 또는 드롭다운
+className="shadow-xl"      // 모달
 ```
 
 ## Z-Index 계층

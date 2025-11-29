@@ -8,17 +8,19 @@
 
 ### 1.2 핵심 요구사항
 - **반응형 필수**: PC와 모바일 모두에서 정상적으로 보여야 함
-- **디자인 톤**: 밝고 따뜻한 느낌, 핑크/살구색 계열, 현대적이고 감각적인 스타일
+- **디자인 톤**: 화이트 베이스 + 인디고/핑크 포인트, 스크롤 애니메이션, 모던하고 세련된 스타일
 
 ### 1.3 기술 스택
 | 영역 | 기술 |
 |------|------|
-| 프론트엔드 | Next.js 14 (App Router), TypeScript, Tailwind CSS |
+| 프론트엔드 | Next.js 14 (App Router), TypeScript, Tailwind CSS, Framer Motion |
 | 백엔드/DB | Supabase (Auth, PostgreSQL) |
 | CMS (블로그) | Sanity |
 | 영상 | YouTube 임베드 |
 | 달력 | FullCalendar + Google Calendar 연동 |
 | 지도 | 네이버 지도 임베드 |
+| 에러 모니터링 | Sentry (에러 추적 및 알림) |
+| 이메일 | Resend (커스텀 이메일 발송) |
 | 배포 | Vercel |
 
 ---
@@ -265,33 +267,83 @@ CREATE TABLE public.lecture_permissions (
 ### Phase 5: 마무리 (1-2일)
 19. 전체 반응형 점검 및 수정
 20. SEO 메타태그 설정
-21. 배포 (Vercel)
-22. 도메인 연결
+21. Sentry 연동 (에러 모니터링)
+22. 배포 (Vercel)
+23. 도메인 연결
 
 ---
 
 ## 7. 디자인 가이드라인
 
-### 7.1 컬러 팔레트
+### 7.1 디자인 컨셉
+- **테마**: 라이트 모드 (화이트 베이스)
+- **스타일**: 깔끔하고 모던한 + 스크롤 애니메이션 + 마이크로 인터랙션
+- **분위기**: 밝고 세련된, 신뢰감 있는 강사 브랜딩
+
+### 7.2 컬러 팔레트
 ```css
---primary: #FF8FAB;      /* 메인 핑크 */
---primary-light: #FFB6C8; /* 연한 핑크 */
---secondary: #FFD4A3;    /* 살구/피치 */
---accent: #A8E6CF;       /* 민트 (포인트) */
---background: #FFFAF5;   /* 따뜻한 화이트 */
---text-primary: #2D2D2D; /* 진한 회색 */
---text-secondary: #6B6B6B; /* 중간 회색 */
+/* 메인 컬러 - 인디고 */
+--primary: #6366F1;       /* 인디고 */
+--primary-light: #818CF8; /* 연한 인디고 */
+--primary-dark: #4F46E5;  /* 진한 인디고 */
+
+/* 포인트 컬러 - 핑크 */
+--accent: #EC4899;        /* 핑크 */
+--accent-light: #F472B6;  /* 연한 핑크 */
+
+/* 그라데이션 */
+--gradient-primary: linear-gradient(135deg, #6366F1, #EC4899);
+
+/* 배경 */
+--background: #FFFFFF;     /* 순백 */
+--background-alt: #F8FAFC; /* 연한 그레이 */
+--background-card: #FFFFFF;
+
+/* 텍스트 */
+--text-primary: #1E293B;   /* 다크 네이비 */
+--text-secondary: #64748B; /* 그레이 */
+--text-muted: #94A3B8;     /* 연한 그레이 */
+
+/* 테두리/구분선 */
+--border: #E2E8F0;
+--border-light: #F1F5F9;
 ```
 
-### 7.2 타이포그래피
-- 한글: Pretendard 또는 Noto Sans KR
+### 7.3 카드 스타일
+```css
+/* 기본 카드 */
+.card {
+  background: #FFFFFF;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+              0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* 호버 시 */
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+              0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+```
+
+### 7.4 타이포그래피
+- 한글: Pretendard
 - 영문: Inter
-- 제목: Bold, 크게
+- 제목: Bold, 다크 네이비 (#1E293B)
 - 본문: Regular, 가독성 좋은 크기 (16-18px)
 
-### 7.3 컴포넌트 스타일
-- 카드: 둥근 모서리 (rounded-xl), 부드러운 그림자
-- 버튼: 둥근 모서리, 호버 시 부드러운 전환
+### 7.5 애니메이션 (Framer Motion)
+- **스크롤 애니메이션**: 뷰포트 진입 시 페이드인 + 아래에서 위로 슬라이드
+- **카드 순차 등장**: stagger 효과 (delay: index * 0.1)
+- **호버 효과**: translateY(-4px), scale(1.02), 그림자 강화
+- **전환 속도**: 0.5~0.7초
+
+### 7.6 컴포넌트 스타일
+- 카드: 화이트 + 그림자, 둥근 모서리 (rounded-xl), 호버 시 살짝 뜨기
+- 버튼: 인디고 단색 또는 인디고→핑크 그라데이션, 호버 시 밝아짐
+- 입력 필드: 흰색 배경, 연한 테두리, 포커스 시 인디고 테두리
+- 헤더: 화이트 배경, 스크롤 시 그림자 추가
 - 여백: 넉넉하게 (padding, margin 충분히)
 
 ---
@@ -318,9 +370,41 @@ lg: 1024px  /* 작은 데스크톱 */
 xl: 1280px  /* 데스크톱 */
 ```
 
+### 8.3 에러 모니터링 (Sentry)
+- **목적**: 프로덕션 환경에서 발생하는 에러를 자동으로 수집하고 알림 받기
+- **서비스**: Sentry (https://sentry.io) - 무료 플랜 월 5,000 에러
+- **기능**:
+  - 에러 발생 시 자동 수집 (에러 메시지, 스택 트레이스, 사용자 환경)
+  - 이메일/Slack 알림
+  - Error Boundary로 사용자에게 친절한 에러 화면 표시
+- **디버깅 방법**: Sentry 대시보드에서 에러 내용 복사 → AI에게 붙여넣기 → 해결책 받기
+
+### 8.4 이메일 서비스 (Resend)
+- **목적**: 회원가입 인증, 비밀번호 재설정 등 이메일 발송
+- **서비스**: Resend (https://resend.com) - 무료 플랜 월 3,000통
+- **기능**:
+  - 커스텀 발신자 주소 설정
+  - 이메일 템플릿 커스터마이징
+  - 발송 성공/실패 로그
+
 ---
 
-## 9. 체크리스트
+## 9. 환경 변수 (.env.local)
+
+> 배포 시 Vercel에도 동일하게 설정 필요
+
+| 변수명 | 설명 | 예시 |
+|--------|------|------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase 프로젝트 URL | `https://xxx.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase 익명 키 | `eyJhbGci...` |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Sanity 프로젝트 ID | `abc123` |
+| `NEXT_PUBLIC_SANITY_DATASET` | Sanity 데이터셋 | `production` |
+| `SENTRY_DSN` | Sentry 연동 키 | `https://xxx@sentry.io/xxx` |
+| `RESEND_API_KEY` | Resend API 키 (서버 전용) | `re_xxx` |
+
+---
+
+## 10. 체크리스트
 
 ### 필수 기능
 - [ ] 반응형 (PC/모바일) 완벽 지원
@@ -331,9 +415,9 @@ xl: 1280px  /* 데스크톱 */
 - [ ] 시간표 달력
 - [ ] 관리자 페이지 (학생/영상/권한 관리)
 - [ ] 푸터 (지도, 연락처)
+- [ ] Sentry 에러 모니터링
 
 ### 선택 기능 (추후)
-- [ ] 다크모드
 - [ ] 댓글 기능
 - [ ] 알림 기능
 - [ ] 수강 진도율 표시

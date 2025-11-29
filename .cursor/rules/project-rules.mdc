@@ -11,10 +11,13 @@ alwaysApply: true
 - **프레임워크**: Next.js 14 (App Router)
 - **언어**: TypeScript
 - **스타일링**: Tailwind CSS
+- **애니메이션**: Framer Motion (스크롤 애니메이션, 마이크로 인터랙션)
 - **백엔드/DB**: Supabase (Auth, PostgreSQL)
 - **CMS**: Sanity
 - **영상**: YouTube 임베드
 - **달력**: FullCalendar
+- **에러 모니터링**: Sentry
+- **이메일**: Resend
 - **배포**: Vercel
 
 ## 핵심 원칙
@@ -25,9 +28,12 @@ alwaysApply: true
 - 모바일 퍼스트로 작성 후 데스크톱 스타일 추가
 
 ### 2. 디자인 톤
-- 밝고 따뜻한 느낌
-- 메인 컬러: 핑크 (#FF8FAB), 살구/피치 (#FFD4A3)
-- 배경: 따뜻한 화이트 (#FFFAF5)
+- **화이트 베이스**: 밝고 깔끔한 화이트 배경
+- **메인 컬러**: 인디고 (#6366F1)
+- **포인트 컬러**: 핑크 (#EC4899)
+- **배경**: 화이트 (#FFFFFF), 연한 그레이 (#F8FAFC)
+- **스타일**: 깔끔한 그림자, 모던한 카드
+- **애니메이션**: Framer Motion 스크롤 애니메이션, 마이크로 인터랙션
 - 둥근 모서리, 부드러운 그림자, 넉넉한 여백
 
 ### 3. 코드 스타일
@@ -67,6 +73,23 @@ src/
 - 쿼리는 GROQ 사용
 - 이미지는 `@sanity/image-url` 패키지로 URL 생성
 - 환경 변수: `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`
+
+## 환경 변수 (.env.local)
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGci...
+
+# Sanity
+NEXT_PUBLIC_SANITY_PROJECT_ID=abc123
+NEXT_PUBLIC_SANITY_DATASET=production
+
+# Sentry (에러 모니터링)
+SENTRY_DSN=https://xxx@sentry.io/xxx
+
+# Resend (이메일)
+RESEND_API_KEY=re_xxx
+```
 
 ## 컴포넌트 작성 규칙
 
@@ -142,6 +165,8 @@ export default async function ProtectedLayout({ children }) {
 - 모든 비동기 작업에 try-catch 사용
 - 사용자 친화적인 에러 메시지 표시
 - 에러 바운더리 컴포넌트 활용
+- **Sentry 연동**: 프로덕션 에러 자동 수집 및 알림
+- 에러 발생 시 Sentry 대시보드에서 확인 → AI에게 에러 내용 공유 → 해결책 받기
 
 ## 성능 최적화
 - 이미지는 Next.js Image 컴포넌트 사용

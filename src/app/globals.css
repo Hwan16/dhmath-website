@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #FFFAF5;  /* 따뜻한 화이트 */
-  --foreground: #2D2D2D;  /* 진한 회색 */
+  --background: #FFFFFF;
+  --foreground: #1E293B;
   --font-pretendard: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 }
 
@@ -15,22 +15,22 @@ body {
   min-height: 100vh;
 }
 
-/* 스크롤바 스타일링 */
+/* 스크롤바 스타일링 - 라이트 모드 */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #FFC1CD;
+  background: #CBD5E1;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #FF8FAB;
+  background: #6366F1;
 }
 
 /* 링크 기본 스타일 */
@@ -41,8 +41,69 @@ a {
 
 /* 포커스 스타일 (접근성) */
 *:focus-visible {
-  outline: 2px solid #FF8FAB;
+  outline: 2px solid #6366F1;
   outline-offset: 2px;
+}
+
+/* 유틸리티 클래스 */
+@layer components {
+  /* 카드 스타일 */
+  .card {
+    @apply bg-white rounded-2xl shadow-card;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300;
+  }
+
+  .card-hover:hover {
+    @apply shadow-card-hover -translate-y-1;
+  }
+
+  /* 그라데이션 텍스트 */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-600 to-accent-500 bg-clip-text text-transparent;
+  }
+
+  /* 버튼 스타일 */
+  .btn-primary {
+    @apply px-6 py-3 bg-primary-500 text-white font-medium rounded-xl 
+           hover:bg-primary-600 hover:shadow-lg
+           transform hover:-translate-y-0.5 transition-all duration-300;
+  }
+
+  .btn-gradient {
+    @apply px-6 py-3 bg-gradient-to-r from-primary-500 to-accent-500 text-white font-medium rounded-xl 
+           hover:from-primary-600 hover:to-accent-600 hover:shadow-lg
+           transform hover:-translate-y-0.5 transition-all duration-300;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 border-2 border-primary-500 text-primary-600 font-medium rounded-xl 
+           hover:bg-primary-50 transition-all duration-300;
+  }
+
+  .btn-ghost {
+    @apply px-4 py-2 text-slate-600 hover:text-primary-600 hover:bg-slate-100 
+           rounded-lg transition-all duration-300;
+  }
+
+  /* 입력 필드 */
+  .input-field {
+    @apply w-full px-4 py-3 bg-white border border-slate-200 rounded-xl 
+           text-slate-900 placeholder-slate-400
+           focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 
+           transition-all duration-300;
+  }
+
+  /* 섹션 배경 */
+  .section-light {
+    @apply bg-slate-50;
+  }
+
+  .section-gradient {
+    @apply bg-gradient-to-br from-primary-50/50 via-white to-accent-50/50;
+  }
 }
 
 @layer utilities {
