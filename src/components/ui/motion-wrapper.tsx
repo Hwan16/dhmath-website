@@ -9,6 +9,20 @@ interface WrapperProps {
   delay?: number;
 }
 
+// 기본 모션 래퍼 (범용)
+export function MotionWrapper({ children, className = '', delay = 0 }: WrapperProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay, ease: 'easeOut' }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 // 섹션 애니메이션 래퍼
 export function SectionWrapper({ children, className = '', delay = 0 }: WrapperProps) {
   return (
