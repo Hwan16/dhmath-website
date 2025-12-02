@@ -111,3 +111,231 @@ a {
     text-wrap: balance;
   }
 }
+
+/* FullCalendar 커스텀 스타일 */
+.fc {
+  --fc-border-color: #E2E8F0;
+  --fc-today-bg-color: #EEF2FF;
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: #F8FAFC;
+}
+
+/* 캘린더 헤더 숨기기 (커스텀 헤더 사용) */
+.fc .fc-toolbar {
+  display: none;
+}
+
+/* 요일 헤더 */
+.fc .fc-col-header-cell {
+  padding: 10px 0;
+  background-color: #F8FAFC;
+  border-color: #E2E8F0;
+}
+
+.fc .fc-col-header-cell-cushion {
+  color: #64748B;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+/* 날짜 셀 */
+.fc .fc-daygrid-day {
+  border-color: #E2E8F0;
+  transition: background-color 0.2s;
+}
+
+.fc .fc-daygrid-day:hover {
+  background-color: #F8FAFC;
+}
+
+/* 날짜 숫자 */
+.fc .fc-daygrid-day-number {
+  color: #334155;
+  font-weight: 500;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+}
+
+/* 오늘 날짜 */
+.fc .fc-day-today {
+  background-color: #EEF2FF !important;
+}
+
+.fc .fc-day-today .fc-daygrid-day-number {
+  background-color: #6366F1;
+  color: white;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px;
+  font-size: 0.8rem;
+}
+
+/* 주말 */
+.fc .fc-day-sat .fc-daygrid-day-number {
+  color: #6366F1;
+}
+
+.fc .fc-day-sun .fc-daygrid-day-number {
+  color: #EC4899;
+}
+
+/* 이벤트 (타임블록) - 데스크톱 */
+.fc .fc-event {
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  border-width: 0;
+  margin: 1px 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.fc .fc-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.fc .fc-event-main {
+  padding: 1px 3px;
+}
+
+.fc .fc-event-time {
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+.fc .fc-event-title {
+  font-weight: 500;
+}
+
+/* 더보기 링크 */
+.fc .fc-daygrid-more-link {
+  color: #6366F1;
+  font-weight: 600;
+  font-size: 0.7rem;
+  margin: 1px 2px;
+}
+
+.fc .fc-daygrid-more-link:hover {
+  color: #4F46E5;
+  text-decoration: underline;
+}
+
+/* 팝오버 스타일 */
+.fc .fc-popover {
+  border-radius: 12px;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.fc .fc-popover-header {
+  background-color: #F8FAFC;
+  padding: 10px 14px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.fc .fc-popover-body {
+  padding: 8px;
+}
+
+/* 이번 달이 아닌 날짜 */
+.fc .fc-day-other .fc-daygrid-day-number {
+  color: #CBD5E1;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 767px) {
+  /* 요일 헤더 */
+  .fc .fc-col-header-cell {
+    padding: 6px 0;
+  }
+  
+  .fc .fc-col-header-cell-cushion {
+    font-size: 0.65rem;
+  }
+  
+  /* 날짜 숫자 - 더 작게 */
+  .fc .fc-daygrid-day-number {
+    padding: 3px 6px;
+    font-size: 0.75rem;
+  }
+  
+  .fc .fc-day-today .fc-daygrid-day-number {
+    width: 22px;
+    height: 22px;
+    font-size: 0.7rem;
+  }
+  
+  /* 이벤트 - 모바일에서는 시간만 표시 */
+  .fc .fc-event {
+    font-size: 0.6rem;
+    padding: 2px 4px;
+    border-radius: 3px;
+    margin: 1px 1px;
+  }
+  
+  .fc .fc-event-main {
+    padding: 0 2px;
+  }
+  
+  /* 모바일에서 이벤트 제목 숨기기, 시간만 표시 */
+  .fc .fc-event-title {
+    display: none;
+  }
+  
+  .fc .fc-event-time {
+    margin-right: 0;
+    font-size: 0.6rem;
+  }
+  
+  /* 더보기 링크 */
+  .fc .fc-daygrid-more-link {
+    font-size: 0.55rem;
+    margin: 0 1px;
+  }
+  
+  /* 날짜 셀 최소 높이 조정 */
+  .fc .fc-daygrid-day-frame {
+    min-height: 60px;
+  }
+  
+  /* 이벤트 영역 */
+  .fc .fc-daygrid-day-events {
+    margin-top: 1px;
+  }
+}
+
+/* 아주 작은 화면 (375px 이하) */
+@media (max-width: 375px) {
+  .fc .fc-col-header-cell-cushion {
+    font-size: 0.6rem;
+  }
+  
+  .fc .fc-daygrid-day-number {
+    padding: 2px 4px;
+    font-size: 0.7rem;
+  }
+  
+  .fc .fc-day-today .fc-daygrid-day-number {
+    width: 20px;
+    height: 20px;
+    font-size: 0.65rem;
+  }
+  
+  .fc .fc-event {
+    font-size: 0.55rem;
+    padding: 1px 3px;
+  }
+  
+  .fc .fc-event-time {
+    font-size: 0.55rem;
+  }
+}

@@ -114,10 +114,15 @@
 ## Phase 4: 부가 기능 (1-2일)
 
 ### 4.1 시간표 페이지
-- [ ] FullCalendar 설치 및 설정
-- [ ] 시간표 페이지 (/schedule)
-- [ ] Google Calendar 연동 (선택)
-- [ ] 월간/주간 뷰 전환
+- [x] FullCalendar 설치 및 설정
+- [x] 시간표 페이지 (/schedule) - 월간 뷰 대형 달력
+- [x] 타임블록 스타일 일정 표시 (시간 + 일정명)
+- [x] 일정 클릭 시 상세 모달
+- [x] 모바일 최적화 (시간만 표시)
+- [x] Supabase schedules 테이블 SQL 작성 (`supabase/migrations/002_create_schedules_table.sql`)
+- [x] 관리자 일정 관리 페이지 (/admin/schedules)
+- [x] 일정 CRUD 기능 (추가/수정/삭제)
+- [x] 캘린더 ↔ Supabase 연동
 
 ### 4.2 푸터 완성
 - [x] 네이버 지도 임베드
@@ -236,13 +241,20 @@
 
 ## 📅 마지막 업데이트
 
-- 날짜: 2024.11.30
-- 완료한 항목: 🎬 **Phase 3 강의 시스템 완료!**
-  - 보호된 페이지 레이아웃
-  - 강의 목록/상세 페이지
-  - 관리자 대시보드, 영상 관리, 학생 관리, 권한 관리 페이지
-- 현재 진행: Phase 3 완료 ✅
-- 다음 진행할 항목: Phase 4 시간표 페이지 또는 Phase 5 마무리
+- 날짜: 2024.12.02
+- 완료한 항목: 🗓️ **Phase 4.1 시간표 페이지 + 관리자 일정 관리 완료!**
+  - FullCalendar 설치 및 설정
+  - 시간표 페이지 (/schedule) - 월간 뷰 대형 달력
+  - 타임블록 스타일 일정 표시 (시간 + 일정명, 컬러 구분)
+  - 일정 클릭 시 상세 모달 (애니메이션 적용)
+  - 모바일 최적화 (시간만 표시)
+  - Supabase schedules 테이블 SQL 작성
+  - 관리자 일정 관리 페이지 (/admin/schedules)
+  - 일정 CRUD 기능 (추가/수정/삭제)
+  - 유형 라벨 변경: 클리닉, 보충수업, 설명회
+  - 시간 입력 UX 개선 (날짜/시간 분리, HH:MM 직접 입력)
+- 현재 진행: Phase 4 완료 ✅
+- 다음 진행할 항목: Phase 5 마무리 (반응형 점검, SEO, 배포)
 
 ### ⚠️ 중요: Supabase 테이블 생성 필요
 **`supabase/migrations/001_create_lectures_tables.sql`** 파일의 SQL을 Supabase SQL Editor에서 실행해야 강의 시스템이 작동합니다.

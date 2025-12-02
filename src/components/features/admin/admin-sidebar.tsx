@@ -9,6 +9,7 @@ import {
   Users, 
   Video, 
   Shield, 
+  Calendar,
   Menu, 
   X,
   ChevronRight
@@ -39,6 +40,12 @@ const menuItems = [
     href: '/admin/permissions', 
     icon: Shield,
     description: '학생별 강의 권한 설정'
+  },
+  { 
+    label: '일정 관리', 
+    href: '/admin/schedules', 
+    icon: Calendar,
+    description: '시간표 일정 추가/수정/삭제'
   },
 ];
 

@@ -178,3 +178,8 @@ export function MotionButton({ children, className = '' }: MotionCardProps) {
 // Re-export motion for custom use
 export { motion };
 
+// motion.div를 직접 사용할 수 있도록 export
+export const MotionDiv = motion.div;
+export const MotionSection = motion.section;
+export const MotionSpan = motion.span;
+
