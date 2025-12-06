@@ -1,12 +1,14 @@
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { redirect, notFound } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
-import { getLecture, getLectures, hasLectureAccess } from '@/lib/supabase/lectures';
-import { extractYouTubeId } from '@/lib/utils/youtube';
-import { MotionWrapper } from '@/components/ui/motion-wrapper';
-import { LectureCard } from '@/components/features/lectures';
-import { ArrowLeft, Play, ChevronRight, Lock } from 'lucide-react';
+import { Metadata } from "next";
+import Link from "next/link";
+import { redirect, notFound } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { getLecture, getLectures, hasLectureAccess } from "@/lib/supabase/lectures";
+import { extractYouTubeId } from "@/lib/utils/youtube";
+import { MotionWrapper } from "@/components/ui/motion-wrapper";
+import { LectureCard } from "@/components/features/lectures";
+import { ArrowLeft, Play, ChevronRight, Lock } from "lucide-react";
+
+const defaultOgImage = "/opengraph-image.png";
 
 interface Props {
   params: { id: string };
@@ -18,13 +20,41 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   if (!lecture) {
     return {
-      title: '강의를 찾을 수 없습니다 | 김다희 수학',
+      title: "강의를 찾을 수 없습니다 | 김다희 수학",
     };
   }
 
+  const videoId = extractYouTubeId(lecture.youtube_url);
+  const ogImage =
+    lecture.thumbnail_url ||
+    (videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : defaultOgImage);
+
   return {
     title: `${lecture.title} | 김다희 수학`,
-    description: lecture.description || '김다희 선생님의 온라인 수학 강의',
+    description: lecture.description || "김다희 선생님의 온라인 수학 강의",
+    alternates: {
+      canonical: `/lectures/${params.id}`,
+    },
+    openGraph: {
+      type: "video.other",
+      title: `${lecture.title} | 김다희 수학`,
+      description: lecture.description || "김다희 선생님의 온라인 수학 강의",
+      url: `/lectures/${params.id}`,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: lecture.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${lecture.title} | 김다희 수학`,
+      description: lecture.description || "김다희 선생님의 온라인 수학 강의",
+      images: [ogImage],
+    },
   };
 }
 

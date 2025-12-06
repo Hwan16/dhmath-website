@@ -1,10 +1,13 @@
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
-import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
-import { getPostDetail, getAllPostSlugs } from '@/lib/sanity/fetch';
-import { urlFor } from '@/lib/sanity/client';
-import { PostBody } from '@/components/features/articles';
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
+import { getPostDetail, getAllPostSlugs } from "@/lib/sanity/fetch";
+import { urlFor } from "@/lib/sanity/client";
+import { PostBody } from "@/components/features/articles";
+
+const defaultOgImage = "/opengraph-image.png";
 
 interface StrategyDetailPageProps {
   params: { slug: string };
@@ -17,16 +20,44 @@ export async function generateStaticParams() {
 }
 
 // 동적 메타데이터
-export async function generateMetadata({ params }: StrategyDetailPageProps) {
+export async function generateMetadata({ params }: StrategyDetailPageProps): Promise<Metadata> {
   const post = await getPostDetail(params.slug);
   
   if (!post) {
-    return { title: '입시 전략을 찾을 수 없습니다' };
+    return { title: "입시 전략을 찾을 수 없습니다" };
   }
+
+  const ogImage = post.thumbnail
+    ? urlFor(post.thumbnail).width(1200).height(630).url()
+    : defaultOgImage;
 
   return {
     title: `${post.title} | 다희쌤 수학`,
     description: post.excerpt || post.title,
+    alternates: {
+      canonical: `/strategy/${params.slug}`,
+    },
+    openGraph: {
+      type: "article",
+      title: `${post.title} | 다희쌤 수학`,
+      description: post.excerpt || post.title,
+      publishedTime: post.publishedAt,
+      url: `/strategy/${params.slug}`,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${post.title} | 다희쌤 수학`,
+      description: post.excerpt || post.title,
+      images: [ogImage],
+    },
   };
 }
 

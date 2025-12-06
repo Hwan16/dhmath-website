@@ -1,12 +1,37 @@
-import { getPosts } from '@/lib/sanity/fetch';
-import { ArticleCard } from '@/components/features/articles';
-import { Trophy } from 'lucide-react';
+import type { Metadata } from "next";
+import { getPosts } from "@/lib/sanity/fetch";
+import { ArticleCard } from "@/components/features/articles";
+import { Trophy } from "lucide-react";
 
 export const revalidate = 60;
 
-export const metadata = {
-  title: '입시 전략 | 다희쌤 수학',
-  description: '수능, 내신, 모의고사 대비 입시 전략을 확인하세요.',
+const defaultOgImage = "/opengraph-image.png";
+
+export const metadata: Metadata = {
+  title: "입시 전략 | 다희쌤 수학",
+  description: "수능, 내신, 모의고사 대비 입시 전략을 확인하세요.",
+  openGraph: {
+    title: "입시 전략 | 다희쌤 수학",
+    description: "수능, 내신, 모의고사 대비 입시 전략을 확인하세요.",
+    url: "/strategy",
+    images: [
+      {
+        url: defaultOgImage,
+        width: 1200,
+        height: 630,
+        alt: "입시 전략 | 다희쌤 수학",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "입시 전략 | 다희쌤 수학",
+    description: "수능, 내신, 모의고사 대비 입시 전략을 확인하세요.",
+    images: [defaultOgImage],
+  },
+  alternates: {
+    canonical: "/strategy",
+  },
 };
 
 export default async function StrategyPage() {

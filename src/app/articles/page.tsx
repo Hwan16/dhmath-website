@@ -1,12 +1,37 @@
-import { getPosts } from '@/lib/sanity/fetch';
-import { ArticleCard } from '@/components/features/articles';
-import { BookOpen } from 'lucide-react';
+import type { Metadata } from "next";
+import { getPosts } from "@/lib/sanity/fetch";
+import { ArticleCard } from "@/components/features/articles";
+import { BookOpen } from "lucide-react";
 
 export const revalidate = 60;
 
-export const metadata = {
-  title: '아티클 | 다희쌤 수학',
-  description: '수학 공부법, 개념 정리, 문제 풀이 팁 등 다양한 아티클을 만나보세요.',
+const defaultOgImage = "/opengraph-image.png";
+
+export const metadata: Metadata = {
+  title: "아티클 | 다희쌤 수학",
+  description: "수학 공부법, 개념 정리, 문제 풀이 팁 등 다양한 아티클을 만나보세요.",
+  openGraph: {
+    title: "아티클 | 다희쌤 수학",
+    description: "수학 공부법, 개념 정리, 문제 풀이 팁 등 다양한 아티클을 만나보세요.",
+    url: "/articles",
+    images: [
+      {
+        url: defaultOgImage,
+        width: 1200,
+        height: 630,
+        alt: "아티클 | 다희쌤 수학",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "아티클 | 다희쌤 수학",
+    description: "수학 공부법, 개념 정리, 문제 풀이 팁 등 다양한 아티클을 만나보세요.",
+    images: [defaultOgImage],
+  },
+  alternates: {
+    canonical: "/articles",
+  },
 };
 
 export default async function ArticlesPage() {

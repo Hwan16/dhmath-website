@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Menu, X, User, LogOut, ChevronDown, Sparkles } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { createClient } from '@/lib/supabase/client';
-import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Menu, X, User, LogOut, ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { createClient } from "@/lib/supabase/client";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 // 네비게이션 메뉴 항목
 const navItems = [
@@ -101,10 +102,17 @@ export function Header() {
           <Link href="/" className="flex items-center gap-2 group">
             <motion.div
               whileHover={{ rotate: 15, scale: 1.1 }}
-              transition={{ type: 'spring', stiffness: 400 }}
-              className="w-10 h-10 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center shadow-md"
+              transition={{ type: "spring", stiffness: 400 }}
+              className="w-11 h-11 rounded-xl flex items-center justify-center shadow-none bg-transparent"
             >
-              <Sparkles className="w-5 h-5 text-white" />
+              <Image
+                src="/logo.svg"
+                alt="김다희 수학 로고"
+                width={32}
+                height={32}
+                className="w-8 h-8"
+                priority
+              />
             </motion.div>
             <span className="text-xl md:text-2xl font-bold text-slate-900 group-hover:text-primary-600 transition-colors">
               다희쌤 수학

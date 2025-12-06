@@ -1,13 +1,37 @@
-import { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
-import { getLectures, getUserLecturePermissions, hasAllAccess } from '@/lib/supabase/lectures';
-import { LectureCard, LectureCardSkeleton } from '@/components/features/lectures';
-import { MotionWrapper } from '@/components/ui/motion-wrapper';
-import { Video, BookOpen } from 'lucide-react';
+import { Metadata } from "next";
+import { createClient } from "@/lib/supabase/server";
+import { getLectures, getUserLecturePermissions, hasAllAccess } from "@/lib/supabase/lectures";
+import { LectureCard, LectureCardSkeleton } from "@/components/features/lectures";
+import { MotionWrapper } from "@/components/ui/motion-wrapper";
+import { Video, BookOpen } from "lucide-react";
+
+const defaultOgImage = "/opengraph-image.png";
 
 export const metadata: Metadata = {
-  title: '온라인 강의 | 김다희 수학',
-  description: '김다희 선생님의 온라인 수학 강의를 수강하세요.',
+  title: "온라인 강의 | 김다희 수학",
+  description: "김다희 선생님의 온라인 수학 강의를 수강하세요.",
+  openGraph: {
+    title: "온라인 강의 | 김다희 수학",
+    description: "김다희 선생님의 온라인 수학 강의를 수강하세요.",
+    url: "/lectures",
+    images: [
+      {
+        url: defaultOgImage,
+        width: 1200,
+        height: 630,
+        alt: "온라인 강의 | 김다희 수학",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "온라인 강의 | 김다희 수학",
+    description: "김다희 선생님의 온라인 수학 강의를 수강하세요.",
+    images: [defaultOgImage],
+  },
+  alternates: {
+    canonical: "/lectures",
+  },
 };
 
 export default async function LecturesPage() {

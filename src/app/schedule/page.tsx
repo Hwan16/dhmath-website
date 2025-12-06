@@ -1,11 +1,35 @@
-import { Metadata } from 'next';
-import { ScheduleCalendar } from '@/components/features/schedule';
-import { MotionDiv } from '@/components/ui/motion';
-import { Calendar } from 'lucide-react';
+import { Metadata } from "next";
+import { ScheduleCalendar } from "@/components/features/schedule";
+import { MotionDiv } from "@/components/ui/motion";
+import { Calendar } from "lucide-react";
+
+const defaultOgImage = "/opengraph-image.png";
 
 export const metadata: Metadata = {
-  title: '다희쌤 시간표 | 김다희 수학',
-  description: '김다희 선생님의 수업 일정을 확인하세요. 정규 수업, 특강, 상담 일정을 한눈에 볼 수 있습니다.',
+  title: "다희쌤 시간표 | 김다희 수학",
+  description: "김다희 선생님의 수업 일정을 확인하세요. 정규 수업, 특강, 상담 일정을 한눈에 볼 수 있습니다.",
+  openGraph: {
+    title: "다희쌤 시간표 | 김다희 수학",
+    description: "김다희 선생님의 수업 일정을 확인하세요. 정규 수업, 특강, 상담 일정을 한눈에 볼 수 있습니다.",
+    url: "/schedule",
+    images: [
+      {
+        url: defaultOgImage,
+        width: 1200,
+        height: 630,
+        alt: "다희쌤 시간표 | 김다희 수학",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "다희쌤 시간표 | 김다희 수학",
+    description: "김다희 선생님의 수업 일정을 확인하세요. 정규 수업, 특강, 상담 일정을 한눈에 볼 수 있습니다.",
+    images: [defaultOgImage],
+  },
+  alternates: {
+    canonical: "/schedule",
+  },
 };
 
 export default function SchedulePage() {
