@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 
 export default function SchedulePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary-50/30 pt-16 md:pt-20">
       {/* 히어로 섹션 */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4">

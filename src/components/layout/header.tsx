@@ -99,24 +99,20 @@ export function Header() {
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* 로고 */}
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center group">
             <motion.div
-              whileHover={{ rotate: 15, scale: 1.1 }}
+              whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400 }}
-              className="w-11 h-11 rounded-xl flex items-center justify-center shadow-none bg-transparent"
             >
               <Image
-                src="/logo.svg"
-                alt="김다희 수학 로고"
-                width={32}
-                height={32}
-                className="w-8 h-8"
+                src="/mathinstitute.svg"
+                alt="김다희 수학연구소"
+                width={170}
+                height={38}
+                className="h-8 md:h-10 w-auto"
                 priority
               />
             </motion.div>
-            <span className="text-xl md:text-2xl font-bold text-slate-900 group-hover:text-primary-600 transition-colors">
-              다희쌤 수학
-            </span>
           </Link>
 
           {/* 데스크톱 네비게이션 */}
