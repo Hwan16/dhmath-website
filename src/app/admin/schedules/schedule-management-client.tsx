@@ -36,6 +36,7 @@ export function ScheduleManagementClient() {
   // 일정 목록 로드
   useEffect(() => {
     loadSchedules();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadSchedules = async () => {
