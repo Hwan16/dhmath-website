@@ -13,13 +13,13 @@ export function HeroSection() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary-100/30 rounded-full blur-[100px]" />
       
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 items-center">
           {/* 텍스트 콘텐츠 */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="text-center lg:text-left"
+            className="text-center xl:text-left"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
@@ -46,7 +46,7 @@ export function HeroSection() {
               수학의 진짜 실력을 키워드립니다.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center xl:justify-start">
               <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   href="/auth/signup"
@@ -72,7 +72,7 @@ export function HeroSection() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3, duration: 0.8, ease: 'easeOut' }}
-            className="flex justify-center lg:justify-end"
+            className="flex justify-center xl:justify-end"
           >
             <div className="relative">
               {/* 메인 프로필 */}

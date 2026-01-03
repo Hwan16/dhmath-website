@@ -26,3 +26,4 @@ export interface PostDetail extends Post {
   nextPost?: { title: string; slug: { current: string } };
 }
 
+

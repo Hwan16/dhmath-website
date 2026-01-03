@@ -3,3 +3,4 @@ import blockContent from './blockContent';
 
 export const schemaTypes = [post, blockContent];
 
+

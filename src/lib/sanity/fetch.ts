@@ -29,3 +29,4 @@ export async function getAllPostSlugs(category: 'article' | 'strategy'): Promise
   return slugs.map((post) => post.slug.current);
 }
 
+
