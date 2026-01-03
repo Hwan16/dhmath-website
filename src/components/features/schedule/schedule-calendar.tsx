@@ -20,9 +20,9 @@ export interface ScheduleEvent {
   borderColor?: string;
   textColor?: string;
   extendedProps?: {
-    description?: string;
-    location?: string;
-    type?: 'class' | 'consultation' | 'other';
+    description?: string | null;
+    location?: string | null;
+    type?: 'class' | 'special' | 'consultation' | 'other';
   };
 }
 
