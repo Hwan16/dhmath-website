@@ -16,7 +16,7 @@ export function createClient() {
         set(name: string, value: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value, ...options });
-          } catch (error) {
+          } catch {
             // 서버 컴포넌트에서 쿠키 설정 시 에러 무시
             // 미들웨어나 Server Action에서만 설정 가능
           }
@@ -24,7 +24,7 @@ export function createClient() {
         remove(name: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value: '', ...options });
-          } catch (error) {
+          } catch {
             // 서버 컴포넌트에서 쿠키 삭제 시 에러 무시
           }
         },

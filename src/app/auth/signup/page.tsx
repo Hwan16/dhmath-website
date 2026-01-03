@@ -2,13 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Loader2, UserPlus, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 
 export default function SignUpPage() {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,7 +54,7 @@ export default function SignUpPage() {
     try {
       const supabase = createClient();
 
-      const { data, error: signUpError } = await supabase.auth.signUp({
+      const { error: signUpError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
         options: {
@@ -80,7 +78,7 @@ export default function SignUpPage() {
       }
 
       setSuccess(true);
-    } catch (err) {
+    } catch {
       setError('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
     } finally {
       setIsLoading(false);

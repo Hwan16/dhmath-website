@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import type { Profile } from '@/types';
@@ -15,9 +14,7 @@ import {
   School,
   Calendar,
   Phone,
-  Mail,
   Star,
-  MoreVertical
 } from 'lucide-react';
 
 interface StudentWithPermissions extends Profile {
@@ -29,7 +26,6 @@ interface StudentListClientProps {
 }
 
 export function StudentListClient({ initialStudents }: StudentListClientProps) {
-  const router = useRouter();
   const supabase = createClient();
   
   const [students, setStudents] = useState<StudentWithPermissions[]>(initialStudents);
@@ -68,9 +64,9 @@ export function StudentListClient({ initialStudents }: StudentListClientProps) {
             : s
         )
       );
-    } catch (err: any) {
+    } catch (err) {
       console.error('권한 변경 실패:', err);
-      alert('권한 변경에 실패했습니다: ' + err.message);
+      alert('권한 변경에 실패했습니다: ' + (err instanceof Error ? err.message : String(err)));
     } finally {
       setIsUpdating(null);
     }
@@ -219,7 +215,7 @@ export function StudentListClient({ initialStudents }: StudentListClientProps) {
                   검색 결과가 없습니다
                 </h3>
                 <p className="text-slate-500">
-                  "{searchQuery}"에 해당하는 학생이 없습니다.
+                  &ldquo;{searchQuery}&rdquo;에 해당하는 학생이 없습니다.
                 </p>
               </>
             ) : (

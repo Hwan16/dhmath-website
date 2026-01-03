@@ -102,6 +102,7 @@ export function ScheduleCalendar() {
     };
 
     loadSchedules();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 모바일 감지

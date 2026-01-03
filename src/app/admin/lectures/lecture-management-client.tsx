@@ -14,7 +14,6 @@ import {
   Save, 
   Eye, 
   EyeOff,
-  GripVertical,
   ExternalLink,
   AlertCircle
 } from 'lucide-react';
@@ -27,7 +26,7 @@ export function LectureManagementClient({ initialLectures }: LectureManagementCl
   const router = useRouter();
   const supabase = createClient();
   
-  const [lectures, setLectures] = useState<Lecture[]>(initialLectures);
+  const [lectures] = useState<Lecture[]>(initialLectures);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLecture, setEditingLecture] = useState<Lecture | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -126,9 +125,9 @@ export function LectureManagementClient({ initialLectures }: LectureManagementCl
 
       closeModal();
       router.refresh();
-    } catch (err: any) {
+    } catch (err) {
       console.error('강의 저장 실패:', err);
-      setError(err.message || '강의 저장에 실패했습니다.');
+      setError(err instanceof Error ? err.message : '강의 저장에 실패했습니다.');
     } finally {
       setIsLoading(false);
     }
@@ -149,9 +148,9 @@ export function LectureManagementClient({ initialLectures }: LectureManagementCl
       if (error) throw error;
       
       router.refresh();
-    } catch (err: any) {
+    } catch (err) {
       console.error('강의 삭제 실패:', err);
-      alert('강의 삭제에 실패했습니다: ' + err.message);
+      alert('강의 삭제에 실패했습니다: ' + (err instanceof Error ? err.message : String(err)));
     }
   };
 
@@ -166,9 +165,9 @@ export function LectureManagementClient({ initialLectures }: LectureManagementCl
       if (error) throw error;
       
       router.refresh();
-    } catch (err: any) {
+    } catch (err) {
       console.error('상태 변경 실패:', err);
-      alert('상태 변경에 실패했습니다: ' + err.message);
+      alert('상태 변경에 실패했습니다: ' + (err instanceof Error ? err.message : String(err)));
     }
   };
 

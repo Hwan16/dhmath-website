@@ -38,7 +38,7 @@ export default function LoginPage() {
     try {
       const supabase = createClient();
 
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password,
       });
@@ -57,7 +57,7 @@ export default function LoginPage() {
 
       router.push('/');
       router.refresh();
-    } catch (err) {
+    } catch {
       setError('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
     } finally {
       setIsLoading(false);

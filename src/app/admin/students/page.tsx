@@ -1,9 +1,8 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { MotionWrapper } from '@/components/ui/motion-wrapper';
 import { StudentListClient } from './student-list-client';
-import { Users, Search } from 'lucide-react';
+import { Users } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: '학생 관리 | 관리자 | 김다희 수학',

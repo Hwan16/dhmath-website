@@ -1,5 +1,5 @@
 import { createClient } from './server';
-import type { Lecture, LecturePermission } from '@/types';
+import type { Lecture } from '@/types';
 
 // 모든 활성 강의 조회
 export async function getLectures(): Promise<Lecture[]> {

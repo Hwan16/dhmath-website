@@ -21,7 +21,9 @@ export interface Post {
 // 게시글 상세 타입
 export interface PostDetail extends Post {
   category: 'article' | 'strategy';
-  body: any[]; // Portable Text
+  // Sanity Portable Text 블록 배열
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  body: any[];
   previousPost?: { title: string; slug: { current: string } };
   nextPost?: { title: string; slug: { current: string } };
 }

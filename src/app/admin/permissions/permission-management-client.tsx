@@ -1,20 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import { extractYouTubeId, getYouTubeThumbnail } from '@/lib/utils/youtube';
 import { 
   Search, 
   Check, 
-  X, 
   User,
   ChevronDown,
   Star,
   Video,
-  CheckCircle,
-  Circle,
   Loader2
 } from 'lucide-react';
 
@@ -110,9 +107,9 @@ export function PermissionManagementClient({
         
         setPermissions(prev => new Set([...prev, lectureId]));
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('권한 변경 실패:', err);
-      alert('권한 변경에 실패했습니다: ' + err.message);
+      alert('권한 변경에 실패했습니다: ' + (err instanceof Error ? err.message : String(err)));
     } finally {
       setIsUpdating(null);
     }
@@ -144,9 +141,9 @@ export function PermissionManagementClient({
       if (error) throw error;
       
       setPermissions(new Set(lectures.map(l => l.id)));
-    } catch (err: any) {
+    } catch (err) {
       console.error('전체 권한 부여 실패:', err);
-      alert('전체 권한 부여에 실패했습니다: ' + err.message);
+      alert('전체 권한 부여에 실패했습니다: ' + (err instanceof Error ? err.message : String(err)));
     } finally {
       setIsBulkUpdating(false);
     }
@@ -169,9 +166,9 @@ export function PermissionManagementClient({
       if (error) throw error;
       
       setPermissions(new Set());
-    } catch (err: any) {
+    } catch (err) {
       console.error('전체 권한 해제 실패:', err);
-      alert('전체 권한 해제에 실패했습니다: ' + err.message);
+      alert('전체 권한 해제에 실패했습니다: ' + (err instanceof Error ? err.message : String(err)));
     } finally {
       setIsBulkUpdating(false);
     }

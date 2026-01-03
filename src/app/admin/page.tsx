@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { MotionWrapper } from '@/components/ui/motion-wrapper';
-import { Users, Video, Shield, TrendingUp, ArrowRight } from 'lucide-react';
+import { Users, Video, Shield, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: '관리자 대시보드 | 김다희 수학',

@@ -1,7 +1,4 @@
-import Link from 'next/link';
-import { ChevronRight, BookOpen, Trophy } from 'lucide-react';
 import { getRecentPosts } from '@/lib/sanity/fetch';
-import { ArticleCard } from '@/components/features/articles';
 import { HeroSection } from '@/components/features/home/hero-section';
 import { CredentialsSection } from '@/components/features/home/credentials-section';
 import { CTASection } from '@/components/features/home/cta-section';

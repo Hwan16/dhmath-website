@@ -5,7 +5,6 @@ import { createClient } from "@/lib/supabase/server";
 import { getLecture, getLectures, hasLectureAccess } from "@/lib/supabase/lectures";
 import { extractYouTubeId } from "@/lib/utils/youtube";
 import { MotionWrapper } from "@/components/ui/motion-wrapper";
-import { LectureCard } from "@/components/features/lectures";
 import { ArrowLeft, Play, ChevronRight, Lock } from "lucide-react";
 
 const defaultOgImage = "/opengraph-image.png";

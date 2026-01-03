@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { getLectures, getUserLecturePermissions, hasAllAccess } from "@/lib/supabase/lectures";
-import { LectureCard, LectureCardSkeleton } from "@/components/features/lectures";
+import { LectureCard } from "@/components/features/lectures";
 import { MotionWrapper } from "@/components/ui/motion-wrapper";
 import { Video, BookOpen } from "lucide-react";
 

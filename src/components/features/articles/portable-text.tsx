@@ -75,6 +75,8 @@ const components: PortableTextComponents = {
 };
 
 interface PostBodyProps {
+  // Sanity Portable Text 블록 배열
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: any[];
 }
 
